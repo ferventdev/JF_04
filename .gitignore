@@ -1,0 +1,14 @@
+# Intellij project files
+.idea
+*.iml
+build
+*.class
+
+# Gradle
+.gradle
+gradle
+target
+gradlew*
+
+# Package files
+*.jar
