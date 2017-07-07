@@ -35,7 +35,7 @@ public class ByteIO {
                     }
                     firstLetter = true;
                     wrongWord = false;
-                } else continue;
+                }
             }
         } catch (FileNotFoundException | SecurityException e) {
             e.printStackTrace();
