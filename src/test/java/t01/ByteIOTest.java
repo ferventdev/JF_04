@@ -1,7 +1,16 @@
 package t01;
 
+import org.hamcrest.core.Is;
 import org.junit.Test;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
@@ -9,10 +18,15 @@ import static org.junit.Assert.*;
  */
 public class ByteIOTest {
     private String filename = "src\\main\\java\\t01\\ByteIO.java";
+
     @Test
-    public void getWords() throws Exception {
-        for (String str : ByteIO.getWords(filename))
-            System.out.print(str + " ");
+    public void getWordsTest() throws Exception {
+        String[] wordsArray = new String(Files.readAllBytes(Paths.get(filename))).split("[^\\w$]");
+        List<String> words = Arrays.stream(wordsArray)
+                .filter(str -> !str.isEmpty() && Character.isJavaIdentifierStart(str.charAt(0)))
+                .collect(Collectors.toList());
+
+        assertThat(ByteIO.getWords(filename), is(words));
     }
 
 }
