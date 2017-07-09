@@ -1,6 +1,7 @@
 package t01;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,12 +28,12 @@ public class ByteIO {
 
     static List<String> getWords(String filename) {
         List<String> words = new ArrayList<>();
-        try (InputStream file = new BufferedInputStream(new FileInputStream(filename))) {
+        try (InputStream f = new BufferedInputStream(new FileInputStream(filename))) {
             StringBuilder word = new StringBuilder();
             boolean firstLetter = true;
             boolean wrongWord = false;
             int b = 0;
-            while ((b = file.read()) != -1) {
+            while ((b = f.read()) != -1) {
                 char ch = (char) b;
                 if (firstLetter && Character.isJavaIdentifierStart(ch)) {
                     word.append(ch);
@@ -63,14 +64,29 @@ public class ByteIO {
 
     static Map<String, Integer> countKeywords(List<String> allWords) {
         Set<String> keywords = Stream.of(javaKeywords).collect(Collectors.toSet());
-        Map<String, Integer> dict = new HashMap<>();
+        Map<String, Integer> stats = new HashMap<>();
         for (String word : allWords) {
             if (keywords.contains(word)) {
-                Integer newValue = dict.getOrDefault(word, 0) + 1;
-                dict.put(word, newValue);
+                Integer newValue = stats.getOrDefault(word, 0) + 1;
+                stats.put(word, newValue);
             }
         }
-        return dict;
+        return stats;
     }
 
+    static void writeStatsToFile(String filename, Map<String, Integer> stats) {
+        try (OutputStream f = new BufferedOutputStream(new FileOutputStream(filename, false))) {
+            Charset charset = Charset.forName("UTF-16");
+            String sep = System.getProperty("line.separator");
+            for (Map.Entry<String, Integer> entry : stats.entrySet()) {
+                String str = entry.getKey() + " : " + entry.getValue() + sep;
+                f.write(str.getBytes(charset));
+            }
+            f.flush();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
