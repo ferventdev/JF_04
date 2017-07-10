@@ -1,4 +1,4 @@
-package t01;
+package t02;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -9,14 +9,14 @@ import java.util.stream.Stream;
 import static t01.JavaKeywords.JAVA_KEYWORDS;
 
 /**
- * Created by Aleksandr Shevkunenko on 07.07.2017.
- * 777_abc - check for the wrong Java identifier
+ * Created by Aleksandr Shevkunenko on 10.07.2017.
+ * 555_xyz - check for the wrong Java identifier
  */
-public class ByteIO {
+public class SymbolicIO {
 
     static List<String> getWords(String filename) {
         List<String> words = new ArrayList<>();
-        try (InputStream f = new BufferedInputStream(new FileInputStream(filename))) {
+        try (Reader f = new BufferedReader(new FileReader(filename))) {
             StringBuilder word = new StringBuilder();
             boolean firstLetter = true;
             boolean wrongWord = false;
@@ -63,12 +63,12 @@ public class ByteIO {
     }
 
     static void writeStatsToFile(String filename, Map<String, Integer> stats) {
-        try (OutputStream f = new BufferedOutputStream(new FileOutputStream(filename, false))) {
+        try (Writer f = new BufferedWriter(new FileWriter(filename, false))) {
             Charset charset = Charset.forName("UTF-16");
             String sep = System.getProperty("line.separator");
             for (Map.Entry<String, Integer> entry : stats.entrySet()) {
                 String str = entry.getKey() + " : " + entry.getValue() + sep;
-                f.write(str.getBytes(charset));
+                f.write(str);
             }
             f.flush();
         } catch (SecurityException e) {

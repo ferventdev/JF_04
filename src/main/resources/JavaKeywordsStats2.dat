@@ -1,0 +1,17 @@
+new : 8
+package : 1
+static : 4
+void : 1
+import : 6
+for : 3
+while : 1
+int : 1
+boolean : 2
+public : 1
+else : 3
+char : 2
+try : 2
+catch : 4
+class : 1
+if : 6
+return : 4

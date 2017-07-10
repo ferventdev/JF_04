@@ -1,4 +1,4 @@
-package t01;
+package t02;
 
 import org.junit.Test;
 
@@ -9,26 +9,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
- * Created by Aleksandr Shevkunenko on 07.07.2017.
+ * Created by Aleksandr Shevkunenko on 10.07.2017.
  */
-public class ByteIOTest {
-    private String input = "src\\main\\java\\t01\\ByteIO.java";
-    private String output = "src\\main\\resources\\JavaKeywordsStats1.dat";
+public class SymbolicIOTest {
+    private String input = "src\\main\\java\\t02\\SymbolicIO.java";
+    private String output = "src\\main\\resources\\JavaKeywordsStats2.dat";
 
     @Test
-    public void byteIOTest() throws Exception {
+    public void symbolicIOTest() throws Exception {
         String[] wordsArray = new String(Files.readAllBytes(Paths.get(input))).split("[^\\w$]");
         List<String> words1 = Arrays.stream(wordsArray)
                 .filter(str -> !str.isEmpty() && Character.isJavaIdentifierStart(str.charAt(0)))
                 .collect(Collectors.toList());
-        List<String> words2 = ByteIO.getWords(input);
+        List<String> words2 = SymbolicIO.getWords(input);
 
         assertThat(words2, is(words1));
 
-        ByteIO.writeStatsToFile(output, ByteIO.countKeywords(words2));
+        SymbolicIO.writeStatsToFile(output, SymbolicIO.countKeywords(words2));
     }
 
 }
