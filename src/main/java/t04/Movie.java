@@ -4,6 +4,7 @@ import lombok.Value;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,10 +15,10 @@ import java.util.stream.Collectors;
 public class Movie implements Serializable {
     private String title;
     private int year;
-    private Set<Actor> actors = new HashSet<>();
+    private List<Actor> actors;
 
-    private Set<String> getActorsAsStrings() {
-        return actors.stream().map(actor -> actor.toString()).collect(Collectors.toSet());
+    private List<String> getActorsAsStrings() {
+        return actors.stream().map(actor -> actor.toString()).collect(Collectors.toList());
     }
 
     @Override

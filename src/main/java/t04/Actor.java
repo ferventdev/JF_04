@@ -1,5 +1,6 @@
 package t04;
 
+import lombok.NonNull;
 import lombok.Value;
 
 import java.io.Serializable;
