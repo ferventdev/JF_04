@@ -19,24 +19,4 @@ public class MovieCollectionTest {
         MovieCollection mc = new MovieCollection();
         mc.save(filename);
     }
-
-    @Test
-    public void movieCollectionTest() throws Exception {
-        FileOutputStream fos = new FileOutputStream(filename);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-
-        Set<Movie> movies = new HashSet<>();
-        oos.writeObject(movies);
-
-        oos.close();
-        fos.close();
-
-        FileInputStream fis = new FileInputStream(filename);
-        ObjectInputStream ois = new ObjectInputStream(fis);
-
-        System.out.println(ois.readObject());
-
-        ois.close();
-        fis.close();
-    }
 }
