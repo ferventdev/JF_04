@@ -1,19 +1,22 @@
 package t04;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
  * Created by Aleksandr Shevkunenko on 13.07.2017.
  */
 public class MovieCollection {
-    static final String filename = "src\\main\\java\\resources\\movies.dat";
+    static final String filename = "src\\main\\resources\\movies.dat";
 
     static final Scanner reader = new Scanner(System.in);
     Set<Movie> movies = new TreeSet<>(Comparator.comparing(Movie::getTitle));
 
     boolean save(String filename) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(filename), StandardOpenOption.CREATE))) {
             oos.writeObject(movies);
         } catch (FileNotFoundException | SecurityException e) {
             System.out.println("The destination file is absent or inaccessible.");
@@ -27,10 +30,10 @@ public class MovieCollection {
     }
 
     boolean open(String filename) {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename) ) ) {
             movies = (Set<Movie>) ois.readObject();
         } catch (FileNotFoundException | SecurityException e) {
-            System.out.println("The destination file is absent or inaccessible.");
+            System.out.println("The destination file is absent (maybe not yet created) or inaccessible.");
             return false;
         } catch (ClassNotFoundException | IOException e) {
             System.out.println("Movie collection opening failed.");
@@ -103,7 +106,7 @@ public class MovieCollection {
     }
 
     void showMenu() {
-        System.out.println("To choose the desired item enter the correspinding number and press Enter.");
+        System.out.println("To choose the desired item enter the corresponding number and press Enter.");
         System.out.println("1. Print the whole collection.");
         System.out.println("2. Add a movie to the collection.");
         System.out.println("3. Remove a movie from the collection.");
@@ -114,7 +117,8 @@ public class MovieCollection {
 
     public static void main(String[] args) {
         MovieCollection mc = new MovieCollection();
-        mc.open(filename);
+        System.out.println(Files.exists(Paths.get(filename)));
+        if (Files.exists(Paths.get(filename))) mc.open(filename);
         outer: for(;;) {
             mc.showMenu();
             int input = 0;
@@ -134,5 +138,6 @@ public class MovieCollection {
                 default: System.out.println("You should enter a number from 1 to 6 and press Enter.");
             }
         }
+        mc.save(filename);
     }
 }
