@@ -3,7 +3,6 @@ package t04;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
@@ -13,15 +12,17 @@ public class MovieCollection {
     static final String filename = "src\\main\\resources\\movies.dat";
 
     static final Scanner reader = new Scanner(System.in);
-    Set<Movie> movies = new TreeSet<>(Comparator.comparing(Movie::getTitle));
+    Set<Movie> movies = new TreeSet<>();
 
     boolean save(String filename) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(filename), StandardOpenOption.CREATE))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename) ) ) {
             oos.writeObject(movies);
         } catch (FileNotFoundException | SecurityException e) {
+            e.printStackTrace();
             System.out.println("The destination file is absent or inaccessible.");
             return false;
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Movie collection saving failed.");
             return false;
         }
@@ -31,7 +32,7 @@ public class MovieCollection {
 
     boolean open(String filename) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename) ) ) {
-            movies = (Set<Movie>) ois.readObject();
+            movies = (TreeSet<Movie>) ois.readObject();
         } catch (FileNotFoundException | SecurityException e) {
             System.out.println("The destination file is absent (maybe not yet created) or inaccessible.");
             return false;
@@ -44,6 +45,10 @@ public class MovieCollection {
     }
 
     boolean removeMovie() {
+        if (movies.isEmpty()) {
+            System.out.println("Currently there is no movies in the collection.");
+            return false;
+        }
         for (;;) {
             System.out.println("Please, enter the title (official name) of the movie you'd like to remove from the collection, or press Q for main menu:");
             String input = reader.nextLine();
@@ -51,6 +56,7 @@ public class MovieCollection {
             for (Iterator<Movie> iter = movies.iterator(); iter.hasNext(); ) {
                 if (input.equalsIgnoreCase(iter.next().getTitle())) {
                     iter.remove();
+                    System.out.println("The movie was successfully removed from the collection.");
                     return true;
                 }
             }
@@ -70,8 +76,9 @@ public class MovieCollection {
                 if (input.equalsIgnoreCase("q")) return false;
                 year = Integer.parseInt(input);
                 if (1900 < year && year < 2100) break;
-            } catch (NumberFormatException e) {
                 System.out.println("The entered year is kinda strange for movie production industry.");
+            } catch (NumberFormatException e) {
+                System.out.println("The entered value isn't a valid number.");
             }
         }
         List<Actor> actorList = null;
@@ -93,6 +100,7 @@ public class MovieCollection {
             break;
         }
         movies.add(new Movie(title, year, actorList));
+        System.out.printf("The movie \"%s\" was successfully added to the collection%n", title);
         return true;
     }
 
@@ -106,7 +114,7 @@ public class MovieCollection {
     }
 
     void showMenu() {
-        System.out.println("To choose the desired item enter the corresponding number and press Enter.");
+        System.out.println("\nTo choose the desired item enter the corresponding number and press Enter.");
         System.out.println("1. Print the whole collection.");
         System.out.println("2. Add a movie to the collection.");
         System.out.println("3. Remove a movie from the collection.");
@@ -117,7 +125,6 @@ public class MovieCollection {
 
     public static void main(String[] args) {
         MovieCollection mc = new MovieCollection();
-        System.out.println(Files.exists(Paths.get(filename)));
         if (Files.exists(Paths.get(filename))) mc.open(filename);
         outer: for(;;) {
             mc.showMenu();
