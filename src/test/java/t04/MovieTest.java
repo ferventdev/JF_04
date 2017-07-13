@@ -17,15 +17,15 @@ import static org.junit.Assert.*;
 public class MovieTest {
     @Test
     public void movieTest() throws Exception {
-        Actor mRodriguex = new Actor("Michelle", "Rodriguez", "USA");
+        Actor mRodrigues = new Actor("Michelle", "Rodriguez", "USA");
         List<Actor> actorsA = Arrays.asList(
             new Actor("Sam", "Worthington", "UK"),
             new Actor("Sigourney", "Weaver", "USA"),
-            mRodriguex);
+            mRodrigues);
         List<Actor> actorsF = Arrays.asList(
                 new Actor("Vin", "Diesel", "USA"),
                 new Actor("Paul", "Walker", "USA"),
-                mRodriguex);
+                mRodrigues);
 
         Movie avatar = new Movie("Avatar", 2009, actorsA);
         Movie theFastAndTheFurious = new Movie("The Fast and the Furious", 2001, actorsF);
@@ -62,5 +62,18 @@ public class MovieTest {
         assertFalse(avatar == _avatar1);
         assertFalse(avatar == _avatar2);
         assertTrue(_avatar1 == _avatar2);
+
+        Actor mRodrigues1 = _avatar1.getActors().get(2);
+        Actor mRodrigues2 = _theFastAndTheFurious.getActors().get(2);
+        Actor mRodrigues3 = _avatar2.getActors().get(2);
+
+        assertEquals(mRodrigues, mRodrigues1);
+        assertEquals(mRodrigues, mRodrigues2);
+        assertEquals(mRodrigues, mRodrigues3);
+        assertFalse(mRodrigues == mRodrigues1);
+        assertFalse(mRodrigues == mRodrigues2);
+        assertFalse(mRodrigues == mRodrigues3);
+        assertTrue(mRodrigues1 == mRodrigues2);
+        assertTrue(mRodrigues2 == mRodrigues3);
     }
 }
